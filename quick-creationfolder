@@ -1,43 +1,5 @@
 
-1. Secret Manager
-2. Secret management secrets ne ela create chestham. Ela use chestham ela delete chestham,
- Key security.: keys wont store plain they will encrypt ayi store avthayi.
-Kms tho keys ne encrypt chestham..
-2 types of kms.
-Goggle 
-Customized.
-
-Cetralized way ofsecrets.
-Functionality is 
-
-1.	What is secret manager:
-Secret Manager stores API keys, passwords, certificates, and other sensitive data. 
-It provides convenience while improving security.
-2.	Access management (IAM).
-Who’s is accessing the secrets.
- Sa, users,
- Project level org level folder level 
-
-3.	Secret manager aem reoles support chestharu. Support chese role
-4.	Keys versioning.
-5.	Centralizing secrets.
-
-6.	What is a secret?
-A secret is a project-global object that contains a collection of metadata and secret versions. 
-The metadata can include replication locations, labels, annotations, and permissions. The secret versions store the actual secret data, such as an API key or credential.
-
-
-7.	Version
-A secret version stores the actual secret data, such as API keys, passwords, or certificates.
-8.	You can address individual versions of a secret. You cannot modify a version, but you can delete it.
-9.	
-4. Rotation
-How many days we rotate a secrets.
-You rotate a secret by adding a new secret version to the secret. Any version of a given secret can be accessed, as long as that version is enabled. To prevent a secret version from being used, you can disable that version.
-
-			labels    
+1. S
    
-
-Centralized way of maintaining secrets in organization.
 
 
