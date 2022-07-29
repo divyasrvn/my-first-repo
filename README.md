@@ -1,2 +1,96 @@
 # my-first-repo
 created this repo manually to learn git commands
+1.	Secret Manager: 
+
+●	Secret Manager stores API keys, passwords, certificates, and other sensitive data. 
+●	It provides convenience while improving security.
+●	It offer fine grained access controls and lets us grant access to secrets at
+o	org level
+o	folder level
+o	project level
+o	secret level
+●	It has versioning, secret rotation, encryption using KMS, high availability 
+
+
+2.	 Secret management 
+
+●	It describes how to create a secret, add a secret version, and access a secret version and how to delete the secret.
+●	Creating a secret requires the Secret Manager Admin role (roles/secretmanager.admin) on the project, folder, or organization.
+
+2.1  Secret security
+Secrets are encrypted using KMS keys, there are 2 Types of kms
+a.	Google managed encryption 
+b.	Customized encryption.
+     
+
+3.	Versioning
+Questions. When do we change versions? 
+whenever you update secret with new values
+
+●	Every time you rotate the secrets a new version will be created. (v1,v2,….)
+●	You can address individual versions of a secret. You cannot modify a version, but you can delete it.
+●	A secret version contains the actual contents of a secret. A secret version can be enabled, disabled, or destroyed. 
+●	We are enabling versioning. When secrets are updated, new versions are created.
+●	Adding a secret version requires the Secret Manager Admin role (roles/secretmanager.admin) on the secret, project, folder, or organization. Roles can't be granted on a secret version.
+●	Enable versioning ideal with Random?
+Note: Any version of a given secret can be accessed if that version is enabled. To prevent a secret version from being used, you can disable that version.
+
+Accessing a secret version.
+●	Accessing a secret version returns the secret contents, as well as additional metadata about the secret version.
+●	 When you access a secret version, you specify its version-id. You can also access the latest version of a secret by specifying "latest" as the version.
+●	Accessing a secret version requires the Secret Manager Secret Accessor role (roles/secretmanager.secretAccessor) on the secret, project, folder, or organization. IAM roles can't be granted on a secret version.
+
+4.	 Identity and access management.
+
+	Access to secrets can be managed at Org level,folder level, project level, secret level
+Granting access at org level gives the ability to access secrets from the entire organization, same applies with folder, project, secret.
+
+It's recommended to grant access at secret for user/group/service account
+
+ 
+5.	Rotation: 
+●	You rotate a secret by adding a new secret version to the secret. 
+●	We need to mention how many days we rotate a secret.?
+
+ Managing scheduled rotation notifications on secrets through Secret Manager.
+
+●	Secret Manager supports rotation schedules on secrets.
+●	 Secret Manager sends messages to Pub/Sub topics configured on the secret based on the provided rotation frequency and rotation time. 
+●	We can set up one-time or periodic schedules on the secrets to receive notifications when it's time to rotate the secret.
+
+
+How does it work?
+Secret Manager sends a SECRET_ROTATE message to the Pub/Sub topics configured on the secret at the secret's next_rotation_time. This timestamp is set in one of two ways:
+1.	Provided by the user when creating or updating the secret.
+2.	If a rotation period is provided, Secret Manager will send a SECRET_ROTATE message after the elapsed rotation period. next_rotation_time will be updated to reflect the new next rotation time.
+You must configure a Pub/Sub subscriber to receive and act on the SECRET_ROTATE messages. If necessary, implement additional workflows such as adding a new secret version and triggering application deployments.
+
+6.	Centralized way of maintaining secrets in organization
+
+●	A dedicated project is created for secret manager for each env (non-prod,prod)
+●	All secrets are created in this project, It only contains secrets, no other services will be used
+●	IAM user/group/service account is given access to a specific secret, multiple based on the requirement
+●	These IAM members can belong to any project, they can be given access to secrets in the secret manager project
+●	Key management is centralized, access is centralized, no other projects have secret manager api enabled
+
+7.	Replication/ High availability.
+
+Secrets have global names and globally replicated metadata, but the location where the secret payload data is stored can be controlled using the replication policy. 
+Each secret has its own replication policy which is set at creation. The locations in the replication policy cannot be updated. There are two types of replication policy.
+
+1.	Automatic
+For billing purposes, a secret with an automatic replication policy is considered to be stored in a single location.
+For purposes of resource location organization policy evaluation, a secret with an automatic replication policy can only be created if resource creation in global is allowed.
+
+     2. User managed
+A secret with a user managed replication policy has its payload data replicated to a user configured set of locations. The secret can be replicated to any number of supported locations. This may be useful if there are requirements around where the secret payload data can be stored.
+For billing purposes, each location in the user managed replication policy is considered a separate location.
+For purposes of resource location organization policy evaluation, a secret with a user managed replication policy can only be created if resource creation is allowed in the all selected locations.
+  
+enforce life cycle policies. ? 
+ Secrets can be given expiration time when they are created, it can be changed after creation also.
+Note : We must enable logs in the secret manager project.
+(Note:Resource consistency  In Secret Manager, adding a secret version and then immediately accessing that secret version is a strongly consistent operation. Other operations within Secret Manager are eventually consistent. Eventually consistent operations typically converge within minutes, but may take a few hours.
+Propagating IAM permissions is eventually consistent. This means granting or revoking access to secrets may not take effect immediately.) 
+Note:Viewing a secret's metadata requires the Secret Viewer role (roles/secretmanager.viewer) on the secret, project, folder, or organization. IAM roles can't be granted on a secret version.
+
