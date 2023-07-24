@@ -22,12 +22,5 @@ resource "google_compute_instance" "gce-vm" {
   //  interface = "SCSI"
   //}
 
-  network_interface {
-    network = var.vpc_network
-    access_config {
-      nat_ip = google_compute_address.static.address
-    }
-  }
-
-  metadata_startup_script = var.startup_scripts
+  n metadata_startup_script = var.startup_scripts
 }
